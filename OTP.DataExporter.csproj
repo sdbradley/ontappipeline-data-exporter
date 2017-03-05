@@ -60,12 +60,21 @@
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <HintPath>packages\Newtonsoft.Json.9.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="OTP.Common">
+      <HintPath>..\ontappipeline-api\OTP.Common\bin\Debug\OTP.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="OTP.Engine">
+      <HintPath>..\ontappipeline-api\OTP.Engine\bin\Debug\OTP.Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="OTP.Utility">
+      <HintPath>..\ontappipeline-api\OTP.Utility\bin\Debug\OTP.Utility.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -102,20 +111,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\OTP.Common\OTP.Common.csproj">
-      <Project>{E4A29B23-B96C-4170-B341-0BCC7667FDAD}</Project>
-      <Name>OTP.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OTP.Engine\OTP.Engine.csproj">
-      <Project>{7361A45E-A2BB-4CCD-B57D-91E1810874E1}</Project>
-      <Name>OTP.Engine</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OTP.Utility\OTP.Utility.csproj">
-      <Project>{43E83AC6-BDD4-411D-BE07-AE5B0BB96539}</Project>
-      <Name>OTP.Utility</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DataExporterInstaller.resx">
