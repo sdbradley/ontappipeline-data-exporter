@@ -1,0 +1,11 @@
+C:\code\ontappipeline-data-exporter\LogglyTester\bin\Debug\LogglyTester.exe.config
+C:\code\ontappipeline-data-exporter\LogglyTester\bin\Debug\LogglyTester.exe
+C:\code\ontappipeline-data-exporter\LogglyTester\bin\Debug\LogglyTester.pdb
+C:\code\ontappipeline-data-exporter\LogglyTester\bin\Debug\log4net-loggly.dll
+C:\code\ontappipeline-data-exporter\LogglyTester\bin\Debug\log4net.dll
+C:\code\ontappipeline-data-exporter\LogglyTester\bin\Debug\Newtonsoft.Json.dll
+C:\code\ontappipeline-data-exporter\LogglyTester\bin\Debug\log4net.xml
+C:\code\ontappipeline-data-exporter\LogglyTester\bin\Debug\Newtonsoft.Json.xml
+C:\code\ontappipeline-data-exporter\LogglyTester\obj\Debug\LogglyTester.csprojResolveAssemblyReference.cache
+C:\code\ontappipeline-data-exporter\LogglyTester\obj\Debug\LogglyTester.exe
+C:\code\ontappipeline-data-exporter\LogglyTester\obj\Debug\LogglyTester.pdb
