@@ -10,10 +10,14 @@ using OTP.Common;
 using OTP.Engine;
 using OTP.Utility;
 using OTP.Common.SFEnterpriseWSDL;
+using log4net;
+using Microsoft.Practices.EnterpriseLibrary.Logging;
 
 namespace OTP.DataExporter
 {
     public partial class DataExporter : ServiceBase {
+
+        private static ILog logger = LogManager.GetLogger(typeof(DataExporter));
 
         System.Timers.Timer timer = new System.Timers.Timer();
         System.Timers.Timer timerDaily = new System.Timers.Timer();
@@ -46,6 +50,8 @@ namespace OTP.DataExporter
             try {
 
                 WriteToLog("OTP.DataExporter started...", Constants.LogSeverityEnum.Information);
+
+                System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12 | System.Net.SecurityProtocolType.Tls11; // comparable to modern browsers
 
                 isTest = false;
                 var testing = 0;
@@ -1500,8 +1506,12 @@ namespace OTP.DataExporter
                                 WriteToLog("GetBatchResults ID3 encoding removed...");
                             }
 
-                            // save to database
+                            // save to S3
+                            UploadToS3(aentity.Body, aentity.Name);
+                            WriteToLog("UploadToS3 succeeded for Attachment: " + aentity.Id);
+
                             AttachmentEngine aengine = new AttachmentEngine();
+                            aentity.Body = string.Empty;
                             DataStructures.BooleanResponse attachbresp = aengine.SetAttachmentEntity(aentity);
                             if (!attachbresp.Result) {
                                 WriteToLog("SetAttachmentEntity details failed: " + attachbresp.Error.Message, Constants.LogSeverityEnum.Error);
@@ -1706,6 +1716,50 @@ namespace OTP.DataExporter
 
             return retval;
         }
+
+        private void UploadToS3(string base64String, string fileName)
+        {
+            try
+            {
+                string _awsAccessKey = ConfigurationManager.AppSettings["awsAccessKey"].ToString();
+                if(string.IsNullOrEmpty(_awsAccessKey)) _awsAccessKey = "AKIAIVQX43LRORBJ4YVQ";
+
+                string _awsSecretKey = ConfigurationManager.AppSettings["awsSecretKey"].ToString();
+                if (string.IsNullOrEmpty(_awsSecretKey)) _awsSecretKey = "4+sZBEA1e2d20GnPtoD2mo7L4kcYZr53ozx7n6Fi";
+
+                string _bucketName = ConfigurationManager.AppSettings["bucketName"].ToString();
+                if (string.IsNullOrEmpty(_bucketName)) _bucketName = "1tap-otp";
+
+                Amazon.S3.IAmazonS3 client;
+                byte[] bytes = Convert.FromBase64String(base64String);
+
+                Amazon.S3.AmazonS3Config S3Config = new Amazon.S3.AmazonS3Config
+                {
+                    ServiceURL = "https://s3.amazonaws.com"
+                };
+
+                using (client = Amazon.AWSClientFactory.CreateAmazonS3Client(_awsAccessKey, _awsSecretKey, S3Config))
+                {
+                    var request = new Amazon.S3.Model.PutObjectRequest
+                    {
+                        BucketName = _bucketName,
+                        CannedACL = Amazon.S3.S3CannedACL.PublicRead,
+                        Key = string.Format("attachments/{0}", fileName)
+                    };
+                    using (var ms = new System.IO.MemoryStream(bytes))
+                    {
+                        request.InputStream = ms;
+                        client.PutObject(request);
+                    }
+                    WriteToLog(fileName + " uploaded");
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteToLog("UploadToS3 ERROR: " + ex.Message);
+            }
+        }
+
         public string CloseJob(string jobid) {
 
             string retval = string.Empty;
@@ -1753,18 +1807,9 @@ namespace OTP.DataExporter
         }
         public void WriteToLog(string logMessage, string method, Common.Constants.LogSeverityEnum level)
         {
-
             try {
-                int logLevel = 0;
-                try {
-                    logLevel = Int32.Parse(ConfigurationManager.AppSettings["logLevel"].ToString());
-                }
-                catch { }
-
-                if (logLevel >= (int)level) {
-                    LoggingEngine.Log(logMessage, method, level);
-                    //Logger.Write(logMessage);
-                }
+                //logger.Error(logMessage);
+                Logger.Write(logMessage);
             }
             catch (Exception ex) {
                 //Logger.Write(ex.Message);
