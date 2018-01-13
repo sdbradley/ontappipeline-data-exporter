@@ -465,6 +465,18 @@ namespace OTP.DataExporter
                                 WriteToLog("Failed to delete Opportunity " + dr.id);
                             }
                             break;
+                        case "OpportunityContactRole":
+                            OpportunityEngine ocrengine = new OpportunityEngine();
+                            DataStructures.BooleanResponse ocrbresp = ocrengine.DeleteOpportunityContactRole(dr.id);
+                            if (ocrbresp.Result)
+                            {
+                                WriteToLog("OpportunityContactRole " + dr.id + " successfully deleted");
+                            }
+                            else
+                            {
+                                WriteToLog("Failed to delete OpportunityContactRole " + dr.id);
+                            }
+                            break;
                         case "Partner":
                             PartnerEngine pengine = new PartnerEngine();
                             DataStructures.BooleanResponse pbresp = pengine.DeletePartnerEntity(dr.id);
