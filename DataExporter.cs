@@ -37,7 +37,7 @@ namespace OTP.DataExporter
         private int processPartners = 1;
         private int processPeriods = 1;
         private int processTasks = 1;
-        private int processAttachments = 0;
+        private int processAttachments = 1;
         private int continueProcessing = 1;
 
         private int daysToProcess = 1;
@@ -353,7 +353,7 @@ namespace OTP.DataExporter
             catch (Exception ex) {
                 WriteToLog(ex.Message + ex.StackTrace, Constants.LogSeverityEnum.Error);
                 if (ex.Message.Contains("INVALID_LOGIN")) {
-                    Utility.Email.SendMail("scott@coreinsightgroup.com", "noreply@coreinsightgroup.com", "OTP Data Exporter Login Failed", ex.Message + ": " + ex.StackTrace);
+                    Utility.Email.SendMail("coreinsightgrp@gmail.com", "noreply@coreinsightgroup.com", "OTP Data Exporter Login Failed", ex.Message + ": " + ex.StackTrace);
                 }
             }
         }
@@ -370,7 +370,7 @@ namespace OTP.DataExporter
             catch (Exception ex) {
                 WriteToLog(ex.Message + ex.StackTrace, Constants.LogSeverityEnum.Error);
                 if (ex.Message.Contains("REQUEST_LIMIT_EXCEEDED")) {
-                    Utility.Email.SendMail("scott@coreinsightgroup.com", "noreply@coreinsightgroup.com", "OTP Data Exporter Failed", ex.Message + ": " + ex.StackTrace);
+                    Utility.Email.SendMail("coreinsightgrp@gmail.com", "noreply@coreinsightgroup.com", "OTP Data Exporter Failed", ex.Message + ": " + ex.StackTrace);
                 }
             }
         }
@@ -596,7 +596,7 @@ namespace OTP.DataExporter
             catch (Exception ex) {
                 WriteToLog(ex.Message + ex.StackTrace, Constants.LogSeverityEnum.Error);
                 if (ex.Message.Contains("REQUEST_LIMIT_EXCEEDED")) {
-                    Utility.Email.SendMail("scott@coreinsightgroup.com", "noreply@coreinsightgroup.com", "OTP Data Exporter Failed", ex.Message + ": " + ex.StackTrace);
+                    Utility.Email.SendMail("coreinsightgrp@gmail.com", "noreply@coreinsightgroup.com", "OTP Data Exporter Failed", ex.Message + ": " + ex.StackTrace);
                 }
             }
         }
@@ -1070,7 +1070,7 @@ namespace OTP.DataExporter
             catch (Exception ex) {
                 WriteToLog(ex.Message + ex.StackTrace, Constants.LogSeverityEnum.Error);
                 if (ex.Message.Contains("REQUEST_LIMIT_EXCEEDED")) {
-                    Utility.Email.SendMail("scott@coreinsightgroup.com", "noreply@coreinsightgroup.com", "OTP Data Exporter Failed", ex.Message + ": " + ex.StackTrace);
+                    Utility.Email.SendMail("coreinsightgrp@gmail.com", "noreply@coreinsightgroup.com", "OTP Data Exporter Failed", ex.Message + ": " + ex.StackTrace);
                 }
             }
         }
@@ -1143,7 +1143,7 @@ namespace OTP.DataExporter
                 WriteToLog(ex.Message + ex.StackTrace, Constants.LogSeverityEnum.Error);
                 if (ex.Message.Contains("REQUEST_LIMIT_EXCEEDED"))
                 {
-                    Utility.Email.SendMail("scott@coreinsightgroup.com", "noreply@coreinsightgroup.com", "OTP Data Exporter Failed", ex.Message + ": " + ex.StackTrace);
+                    Utility.Email.SendMail("coreinsightgrp@gmail.com", "noreply@coreinsightgroup.com", "OTP Data Exporter Failed", ex.Message + ": " + ex.StackTrace);
                 }
             }
         }
@@ -1507,6 +1507,7 @@ namespace OTP.DataExporter
                             }
 
                             // save to S3
+                            aentity.Name = aentity.Name.Replace("/", "_").Replace(" ", "_");
                             UploadToS3(aentity.Body, aentity.Name);
                             WriteToLog("UploadToS3 succeeded for Attachment: " + aentity.Id);
 
@@ -1808,11 +1809,11 @@ namespace OTP.DataExporter
         public void WriteToLog(string logMessage, string method, Common.Constants.LogSeverityEnum level)
         {
             try {
-                //logger.Error(logMessage);
-                Logger.Write(logMessage);
+                logger.Error(logMessage);
+                //Logger.Write(logMessage);
             }
             catch (Exception ex) {
-                //Logger.Write(ex.Message);
+                Logger.Write(ex.Message);
             }
         }
 
